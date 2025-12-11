@@ -1503,7 +1503,7 @@ function renderTabelaJogos(){
   }
 
   dados.forEach(j => {
-    const codigo = j.codigoEVE ?? '';
+    const codigo = j.CodigoEVE ?? j.codigoEVE ?? '';
     const sede = j.Sede ?? j.Local ?? '';
     const grupo = j.Grupo ?? '';
     const rodada = j.RodadaDupla ?? j.Rodada ?? '';
@@ -1593,4 +1593,5 @@ window.addEventListener("DOMContentLoaded", function(){
 
 </script>
 </body>
+
 </html>
