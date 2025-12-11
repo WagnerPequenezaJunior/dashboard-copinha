@@ -37,10 +37,9 @@ body{margin:0;background:var(--bg);padding:22px;display:flex;justify-content:cen
 .title{font-size:28px;font-weight:900;color:#fff}
 .header-sub{font-size:13px;opacity:0.95}
 .header-right{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
-.header-actions{display:flex;gap:8px;align-items:center}
-.upload-btn, .refresh-btn{
-  background:var(--accent);
-  color:var(--purple-dark);
+.refresh-btn{
+  background:linear-gradient(135deg, var(--purple) 0%, var(--purple-dark) 100%);
+  color:white;
   border:none;
   padding:8px 16px;
   border-radius:8px;
@@ -51,15 +50,8 @@ body{margin:0;background:var(--bg);padding:22px;display:flex;justify-content:cen
   text-transform:uppercase;
   letter-spacing:0.5px;
 }
-.upload-btn:hover, .refresh-btn:hover{
-  transform:translateY(-2px);
-  box-shadow:0 4px 12px rgba(255,209,0,0.4);
-}
-.refresh-btn{
-  background:linear-gradient(135deg, var(--purple) 0%, var(--purple-dark) 100%);
-  color:white;
-}
 .refresh-btn:hover{
+  transform:translateY(-2px);
   box-shadow:0 4px 12px rgba(128,0,255,0.4);
 }
 .refresh-btn:disabled{
@@ -76,7 +68,7 @@ body{margin:0;background:var(--bg);padding:22px;display:flex;justify-content:cen
   50% { opacity: 0.5; }
 }
 
-/* CARDS (mantendo todo o CSS original) */
+/* CARDS */
 .cards-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
 .card{
   background:linear-gradient(135deg, #fff 0%, #f8f5ff 100%);
@@ -542,7 +534,7 @@ td:first-child{text-align:left;padding-left:16px;}
 <body>
 <div class="container">
 
-<!-- HEADER -->
+<!-- HEADER (SEM BOTÃO DE UPLOAD) -->
 <div class="header">
   <div class="header-left">
     <div class="logo">CF</div>
@@ -552,12 +544,8 @@ td:first-child{text-align:left;padding-left:16px;}
     </div>
   </div>
   <div class="header-right">
-    <div class="header-actions">
-      <button class="refresh-btn" id="btnRefresh">🔄 Atualizar</button>
-      <button class="upload-btn" onclick="document.getElementById('fileInput').click()">📁 Carregar JSON</button>
-    </div>
+    <button class="refresh-btn" id="btnRefresh">🔄 Atualizar</button>
     <div id="loadTimestamp" class="load-info loading">Carregando dados...</div>
-    <input id="fileInput" type="file" accept=".json" style="display:none">
   </div>
 </div>
 
@@ -772,13 +760,12 @@ async function carregarDadosAPI(){
     console.error("Erro ao carregar API:", error);
     
     // Mostra erro
-    loadTimestamp.textContent = "❌ Erro ao carregar API - Use upload manual";
+    loadTimestamp.textContent = "❌ Erro ao carregar API";
     loadTimestamp.classList.remove("loading");
     
     // Alerta amigável
     alert(
       "❌ Não foi possível carregar os dados da API.\n\n" +
-      "Use o botão 'Carregar JSON' para fazer upload manual do arquivo.\n\n" +
       "Erro: " + error.message
     );
     
@@ -786,42 +773,6 @@ async function carregarDadosAPI(){
     // Reabilita botão
     btnRefresh.disabled = false;
   }
-}
-
-/* ============================================
-   CARREGAMENTO MANUAL (ARQUIVO JSON)
-============================================ */
-function handleFile(event){
-  const file = event.target.files[0];
-  if(!file) return;
-  
-  const loadTimestamp = document.getElementById("loadTimestamp");
-  const reader = new FileReader();
-  
-  reader.onload = function(e){
-    try {
-      jsonData = JSON.parse(e.target.result);
-      console.log("Arquivo JSON carregado:", jsonData);
-      
-      // Renderiza tudo
-      renderAll();
-      
-      // Atualiza timestamp
-      loadTimestamp.textContent = `📁 Arquivo carregado manualmente • ${new Date().toLocaleString("pt-BR")}`;
-      loadTimestamp.classList.remove("loading");
-      
-    } catch(err){
-      console.error("Erro ao parsear JSON:", err);
-      alert("❌ Erro ao processar o arquivo JSON.\n\nVerifique se o arquivo está correto.\n\nErro: " + err.message);
-    }
-  };
-  
-  reader.onerror = function(){
-    console.error("Erro ao ler arquivo");
-    alert("❌ Erro ao ler o arquivo. Tente novamente.");
-  };
-  
-  reader.readAsText(file);
 }
 
 /* ============================================
@@ -1043,7 +994,7 @@ function renderChartVendasDia(){
       }
     }
   });
-}  
+}
 
 /* ============================================
    DISTRIBUIÇÃO DE INGRESSOS
@@ -1069,10 +1020,15 @@ function renderDistribuicao(mode){
 }
 
 /* ============================================
-   GRÁFICO DE SEDES
+   GRÁFICO DE SEDES (COM FILTRO PARA PRÓXIMOS)
 ============================================ */
 function renderSedes(mode){
-  const arr = mode === "total" ? jsonData.SedesTotal || [] : jsonData.SedesProximos || [];
+  let arr = mode === "total" ? jsonData.SedesTotal || [] : jsonData.SedesProximos || [];
+  
+  // FILTRO: Remove sedes com DisponiveisProximos = 0 quando mode = "proximos"
+  if (mode === "proximos") {
+    arr = arr.filter(x => (x.DisponiveisProximos ?? 0) > 0);
+  }
   
   if(chartSedes) chartSedes.destroy();
   
@@ -1124,10 +1080,15 @@ function renderSedes(mode){
 }
 
 /* ============================================
-   GRÁFICO DE GRUPOS
+   GRÁFICO DE GRUPOS (COM FILTRO PARA PRÓXIMOS)
 ============================================ */
 function renderGrupos(mode){
-  const arr = mode === "total" ? jsonData.GruposTotal || [] : jsonData.GruposProximos || [];
+  let arr = mode === "total" ? jsonData.GruposTotal || [] : jsonData.GruposProximos || [];
+  
+  // FILTRO: Remove grupos com DisponiveisProximos = 0 quando mode = "proximos"
+  if (mode === "proximos") {
+    arr = arr.filter(x => (x.DisponiveisProximos ?? 0) > 0);
+  }
   
   if(chartGrupos) chartGrupos.destroy();
   
@@ -1554,9 +1515,6 @@ function renderTabelaJogos(){
 // Botão Atualizar (recarrega da API)
 document.getElementById("btnRefresh").addEventListener("click", carregarDadosAPI);
 
-// Input de arquivo (upload manual)
-document.getElementById("fileInput").addEventListener("change", handleFile);
-
 // Botões Total / Próximos Jogos
 document.getElementById("btnTotal").addEventListener("click", function(){
   distribMode = "total";
@@ -1593,5 +1551,4 @@ window.addEventListener("DOMContentLoaded", function(){
 
 </script>
 </body>
-
 </html>
