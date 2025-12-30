@@ -3,7 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Copinha Feminina - Dashboard</title>
+<title>Copinha Masculina 2026 - Dashboard</title>
+
+<!-- Chart.js Treemap Plugin -->
+<script src="https://cdn.jsdelivr.net/npm/chartjs-chart-treemap@2.3.0"></script>
 
 <!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -14,10 +17,10 @@
 
 <style>
 :root{
-  --purple:#8000ff;
-  --purple-dark:#6600cc;
-  --purple-light:#9933ff;
-  --accent:#ffd100;
+  --purple:#9b1cdb;
+  --purple-dark:#7a16af;
+  --purple-light:#b845e8;
+  --accent:#f8e847;
   --bg:#f6f5fb;
   --card-radius:16px;
   --max-width:1400px;
@@ -28,11 +31,85 @@
 body{margin:0;background:var(--bg);padding:22px;display:flex;justify-content:center}
 .container{width:100%;max-width:var(--max-width);}
 
+/* ============================================
+   PROGRESS BAR - LOADING NO TOPO
+============================================ */
+#progressBar{
+  position:fixed;
+  top:0;
+  left:0;
+  width:0%;
+  height:4px;
+  background:linear-gradient(90deg, var(--purple) 0%, var(--accent) 100%);
+  z-index:9999;
+  transition:width 0.3s ease;
+  box-shadow:0 2px 8px rgba(155,28,219,0.4);
+}
+
+/* ============================================
+   SKELETON LOADING - ANIMAÇÃO
+============================================ */
+.skeleton{
+  background:linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size:200% 100%;
+  animation:loading 1.5s infinite;
+  border-radius:8px;
+}
+
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.skeleton-card{
+  background:linear-gradient(135deg, #fff 0%, #f8f5ff 100%);
+  border-radius:16px;
+  padding:20px;
+  border:2px solid rgba(155,28,219,0.1);
+  height:130px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+
+.skeleton-title{
+  width:60%;
+  height:14px;
+  margin-bottom:12px;
+}
+
+.skeleton-value{
+  width:80%;
+  height:36px;
+}
+
+.skeleton-chart{
+  background:linear-gradient(135deg, #faf8ff 0%, #fff 100%);
+  border-radius:14px;
+  padding:18px;
+  border:2px solid rgba(155,28,219,0.1);
+  height:350px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.skeleton-chart-title{
+  width:40%;
+  height:18px;
+}
+
+.skeleton-chart-body{
+  flex:1;
+  width:100%;
+}
+
 /* HEADER */
 .header{
   background:linear-gradient(135deg,var(--purple),var(--purple-dark));
   color:#fff;padding:18px;border-radius:var(--card-radius);
   display:flex;align-items:center;justify-content:space-between;gap:12px;
+  flex-wrap:wrap;
 }
 .header-left{display:flex;align-items:center;gap:14px}
 .logo{width:72px;height:72px;border-radius:50%;background:var(--accent);
@@ -56,7 +133,7 @@ body{margin:0;background:var(--bg);padding:22px;display:flex;justify-content:cen
 }
 .refresh-btn:hover{
   transform:translateY(-2px);
-  box-shadow:0 4px 12px rgba(128,0,255,0.4);
+  box-shadow:0 4px 12px rgba(155,28,219,0.4);
 }
 .refresh-btn:disabled{
   opacity:0.5;
@@ -101,7 +178,7 @@ body{margin:0;background:var(--bg);padding:22px;display:flex;justify-content:cen
   background:linear-gradient(135deg, #fff 0%, #f8f5ff 100%);
   border-radius:16px;
   padding:20px;
-  border:2px solid rgba(128,0,255,0.1);
+  border:2px solid rgba(155,28,219,0.1);
   display:flex;
   flex-direction:column;
   justify-content:space-between;
@@ -109,12 +186,12 @@ body{margin:0;background:var(--bg);padding:22px;display:flex;justify-content:cen
   position:relative;
   overflow:hidden;
   transition:all 0.3s ease;
-  box-shadow:0 2px 8px rgba(128,0,255,0.08);
+  box-shadow:0 2px 8px rgba(155,28,219,0.08);
 }
 .card:hover{
   transform:translateY(-4px);
-  box-shadow:0 8px 24px rgba(128,0,255,0.15);
-  border-color:rgba(128,0,255,0.3);
+  box-shadow:0 8px 24px rgba(155,28,219,0.15);
+  border-color:rgba(155,28,219,0.3);
 }
 .card::before{
   content:'';
@@ -201,7 +278,7 @@ body{margin:0;background:var(--bg);padding:22px;display:flex;justify-content:cen
   font-weight:700;
   padding:4px 12px;
   border-radius:20px;
-  background:rgba(128,0,255,0.1);
+  background:rgba(155,28,219,0.1);
   color:var(--purple);
 }
 .card-today-flex .sub.positive{background:#e8f5e9;color:#2e7d32;}
@@ -231,13 +308,13 @@ body{margin:0;background:var(--bg);padding:22px;display:flex;justify-content:cen
   letter-spacing:0.5px;
 }
 .toggle-btn:hover{
-  background:rgba(128,0,255,0.05);
+  background:rgba(155,28,219,0.05);
   transform:translateY(-2px);
 }
 .toggle-btn.active{
   background:var(--purple);
   color:white;
-  box-shadow:0 4px 12px rgba(128,0,255,0.3);
+  box-shadow:0 4px 12px rgba(155,28,219,0.3);
 }
 .distribuicao-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:14px}
 .card-dist{
@@ -291,7 +368,7 @@ body{margin:0;background:var(--bg);padding:22px;display:flex;justify-content:cen
   font-weight:900;
   color:white;
   font-size:18px;
-  box-shadow:0 4px 16px rgba(128,0,255,0.25);
+  box-shadow:0 4px 16px rgba(155,28,219,0.25);
   display:flex;
   align-items:center;
   justify-content:center;
@@ -302,22 +379,22 @@ body{margin:0;background:var(--bg);padding:22px;display:flex;justify-content:cen
   text-shadow:2px 2px 4px rgba(0,0,0,0.2);
 }
 
-/* CHARTS */
-.row-charts{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}
+/* CHARTS - UM POR LINHA */
+.row-charts{display:grid;grid-template-columns:1fr;gap:14px;margin-top:18px}
 .chart-card{
   background:linear-gradient(135deg, #faf8ff 0%, #fff 100%);
   padding:18px;
   border-radius:14px;
-  border:2px solid rgba(128,0,255,0.1);
+  border:2px solid rgba(155,28,219,0.1);
   position:relative;
   overflow:hidden;
   transition:all 0.3s ease;
-  box-shadow:0 2px 12px rgba(128,0,255,0.08);
+  box-shadow:0 2px 12px rgba(155,28,219,0.08);
 }
 .chart-card:hover{
   transform:translateY(-4px);
-  box-shadow:0 8px 24px rgba(128,0,255,0.15);
-  border-color:rgba(128,0,255,0.3);
+  box-shadow:0 8px 24px rgba(155,28,219,0.15);
+  border-color:rgba(155,28,219,0.3);
 }
 .chart-card::before{
   content:'';
@@ -335,13 +412,13 @@ body{margin:0;background:var(--bg);padding:22px;display:flex;justify-content:cen
   background:linear-gradient(135deg, #fff 0%, #f8f5ff 100%);
   border-radius:14px;
   padding:20px;
-  border:2px solid rgba(128,0,255,0.1);
+  border:2px solid rgba(155,28,219,0.1);
   transition:all 0.3s ease;
 }
 .donut-card:hover{
   transform:translateY(-4px);
-  box-shadow:0 8px 24px rgba(128,0,255,0.15);
-  border-color:rgba(128,0,255,0.3);
+  box-shadow:0 8px 24px rgba(155,28,219,0.15);
+  border-color:rgba(155,28,219,0.3);
 }
 .donut-title{
   font-weight:900;
@@ -371,7 +448,7 @@ body{margin:0;background:var(--bg);padding:22px;display:flex;justify-content:cen
   align-items:center;
   justify-content:space-between;
   padding:6px 10px;
-  background:rgba(128,0,255,0.04);
+  background:rgba(155,28,219,0.04);
   border-radius:6px;
   font-weight:700;
 }
@@ -398,16 +475,50 @@ body{margin:0;background:var(--bg);padding:22px;display:flex;justify-content:cen
   background:linear-gradient(135deg, var(--purple) 0%, var(--purple-dark) 100%);
   border-radius:16px;
   padding:20px;
-  box-shadow:0 4px 20px rgba(128,0,255,0.2);
+  box-shadow:0 4px 20px rgba(155,28,219,0.2);
+}
+.table-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:16px;
+  flex-wrap:wrap;
+  gap:12px;
 }
 .table-title{
   color:#fff;
   font-size:20px;
   font-weight:900;
-  margin-bottom:16px;
-  text-align:center;
   text-transform:uppercase;
   letter-spacing:1px;
+}
+.rodada-filters{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+.rodada-btn{
+  padding:8px 16px;
+  font-weight:800;
+  border-radius:8px;
+  border:2px solid rgba(255,255,255,0.3);
+  background:rgba(255,255,255,0.1);
+  cursor:pointer;
+  transition:all 0.3s ease;
+  color:#fff;
+  font-size:12px;
+  text-transform:uppercase;
+  letter-spacing:0.5px;
+}
+.rodada-btn:hover{
+  background:rgba(255,255,255,0.2);
+  transform:translateY(-2px);
+}
+.rodada-btn.active{
+  background:#fff;
+  color:var(--purple);
+  border-color:#fff;
+  box-shadow:0 4px 12px rgba(255,255,255,0.3);
 }
 .table-container{
   background:#fff;
@@ -439,7 +550,7 @@ tbody tr{
   border-bottom:1px solid #f0f0f0;
 }
 tbody tr:hover{
-  background:rgba(128,0,255,0.04);
+  background:rgba(155,28,219,0.04);
 }
 tbody tr:last-child{
   border-bottom:none;
@@ -527,7 +638,7 @@ td:first-child{text-align:left;padding-left:16px;}
 }
 .number-purple{
   color:var(--purple);
-  background:rgba(128,0,255,0.08);
+  background:rgba(155,28,219,0.08);
   padding:4px 8px;
   border-radius:6px;
 }
@@ -548,58 +659,232 @@ td:first-child{text-align:left;padding-left:16px;}
   color:var(--purple);
   text-align:center;
   font-size:13px;
-  background:rgba(128,0,255,0.06);
+  background:rgba(155,28,219,0.06);
   padding:6px;
   border-radius:8px;
 }
 
+/* SEDES - CARDS COM BARRAS */
+.sede-card{
+  background:linear-gradient(135deg, #fff 0%, #faf9fc 100%);
+  border-radius:12px;
+  padding:16px;
+  border:2px solid rgba(155,28,219,0.1);
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.sede-item{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:8px 0;
+  border-bottom:1px solid rgba(155,28,219,0.08);
+}
+.sede-item:last-child{
+  border-bottom:none;
+}
+.sede-nome{
+  font-size:11px;
+  font-weight:700;
+  color:#334155;
+  min-width:100px;
+  flex-shrink:0;
+}
+.sede-bar-container{
+  flex:1;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.sede-bar-bg{
+  flex:1;
+  height:20px;
+  background:#f1f5f9;
+  border-radius:10px;
+  overflow:hidden;
+  position:relative;
+}
+.sede-bar-fill{
+  height:100%;
+  background:linear-gradient(90deg, #9b1cdb 0%, #b845e8 100%);
+  border-radius:10px;
+  transition:width 0.6s ease;
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  padding-right:6px;
+}
+.sede-valor{
+  font-size:11px;
+  font-weight:900;
+  color:#9b1cdb;
+  min-width:35px;
+  text-align:right;
+}
+
 /* FOOTER */
 .footer-note{margin-top:14px;color:#666;font-size:13px;text-align:center}
+
+/* ============================================
+   RESPONSIVIDADE - MEDIA QUERIES
+============================================ */
+
+/* TABLETS - ATÉ 1024px */
+@media (max-width: 1024px) {
+  .cards-row{grid-template-columns:repeat(2,1fr);}
+  .cards-row-today{grid-template-columns:repeat(2,1fr);}
+  .distribuicao-cards{grid-template-columns:repeat(2,1fr);}
+  #usuariosArea > div:last-child{grid-template-columns:repeat(2,1fr);}
+  #sedesContainer{grid-template-columns:repeat(2,1fr) !important;}
+}
+
+/* MOBILE - ATÉ 768px */
+@media (max-width: 768px) {
+  body{padding:12px;}
+  
+/* Top 5 em 1 coluna */
+.container > div > div[style*="grid-template-columns:repeat(2,1fr)"] {
+    grid-template-columns: 1fr !important;
+
+  .header{flex-direction:column;align-items:flex-start;}
+  .header-right{align-items:flex-start;width:100%;}
+  .header-right > div{flex-direction:column;width:100%;}
+  .refresh-btn, .export-btn{width:100%;}
+  
+  .title{font-size:22px;}
+  .logo{width:60px;height:60px;font-size:28px;}
+  
+  .cards-row{grid-template-columns:1fr;}
+  .cards-row-today{grid-template-columns:1fr;}
+  .distribuicao-cards{grid-template-columns:1fr;}
+  
+  .card-today-flex{height:auto;min-height:120px;padding:18px;}
+  .card-today-flex .right .value{font-size:36px;}
+  
+  .toggle-btn{font-size:11px;padding:8px 14px;}
+  
+  #usuariosArea > div:last-child{grid-template-columns:1fr;}
+  #sedesContainer{grid-template-columns:1fr !important;}
+  
+  .table-header{flex-direction:column;align-items:flex-start;}
+  .table-title{font-size:16px;}
+  .rodada-filters{width:100%;}
+  .rodada-btn{flex:1;font-size:10px;padding:6px 10px;}
+}
+
+/* MOBILE PEQUENO - ATÉ 480px */
+@media (max-width: 480px) {
+  body{padding:8px;}
+  
+  .card{padding:16px;height:auto;min-height:110px;}
+  .card .label{font-size:11px;}
+  .card .value{font-size:28px;}
+  
+  .chart-card{padding:14px;}
+  
+  .donut-container{height:180px;}
+  
+  .footer-note{font-size:11px;}
+}
 </style>
 </head>
 
 <body>
+
+<!-- PROGRESS BAR NO TOPO -->
+<div id="progressBar"></div>
+
 <div class="container">
 
-<!-- HEADER (SEM BOTÃO DE UPLOAD) -->
+<!-- HEADER 
 <div class="header">
   <div class="header-left">
-    <div class="logo">CF</div>
+    <div class="logo">CM</div>
     <div>
-      <div class="title">Copinha Feminina</div>
+      <div class="title">Copinha Masculina 2026</div>
       <div class="header-sub">Dashboard • Dados em tempo real</div>
     </div>
   </div>
   <div class="header-right">
-    <div style="display:flex;gap:8px;">
+    <div style="display:flex;gap:8px;width:100%;">
       <button class="refresh-btn" id="btnRefresh">🔄 Atualizar</button>
       <button class="export-btn" id="btnExport">📄 Exportar PDF</button>
     </div>
     <div id="loadTimestamp" class="load-info loading">Carregando dados...</div>
   </div>  
-</div>
+</div>-->
+
+<!-- HEADER -->
+<div class="header">
+    <div class="header-left">
+      <img src="logo-copinha.png" alt="Copinha Logo" style="height:72px;border-radius:8px;">
+      <div>
+        <div class="title">Copinha Masculina 2026</div>
+        <div class="header-sub">Dashboard • Dados em tempo real</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div style="display:flex;gap:8px;width:100%;">
+        <button class="refresh-btn" id="btnRefresh">🔄 Atualizar</button>
+        <button class="export-btn" id="btnExport">📄 Exportar PDF</button>
+      </div>
+      <div id="loadTimestamp" class="load-info loading">Carregando dados...</div>
+    </div>  
+  </div>
 
 <!-- MAIN -->
 <div class="top-grid">
   <div class="left-col">
 
-    <!-- CARDS ÚLTIMA HORA -->
-    <div class="cards-row" id="cardsUltimaHora"></div>
-
-    <!-- CARDS HOJE -->
-    <div class="cards-row-today" id="cardsHojeWrapper"></div>
-
-    <!-- GRÁFICO EVOLUÇÃO DIÁRIA -->
-    <div class="chart-card">
-      <div style="font-weight:900;color:var(--purple-dark);margin-bottom:12px;font-size:18px;display:flex;align-items:center;gap:8px">
-        <span style="font-size:24px">📊</span> Evolução Diária - Vendas, Cadastros e Faciais
+    <!-- CARDS ÚLTIMA HORA (COM SKELETON) -->
+    <div class="cards-row" id="cardsUltimaHora">
+      <!-- Skeleton Loading -->
+      <div class="skeleton-card">
+        <div class="skeleton skeleton-title"></div>
+        <div class="skeleton skeleton-value"></div>
       </div>
-      <div class="chart-wrap" style="height:300px"><canvas id="chartVendasDia"></canvas></div>
+      <div class="skeleton-card">
+        <div class="skeleton skeleton-title"></div>
+        <div class="skeleton skeleton-value"></div>
+      </div>
+      <div class="skeleton-card">
+        <div class="skeleton skeleton-title"></div>
+        <div class="skeleton skeleton-value"></div>
+      </div>
+      <div class="skeleton-card">
+        <div class="skeleton skeleton-title"></div>
+        <div class="skeleton skeleton-value"></div>
+      </div>
+    </div>
+
+    <!-- CARDS HOJE (COM SKELETON) -->
+    <div class="cards-row-today" id="cardsHojeWrapper">
+      <div class="skeleton-card" style="height:140px;">
+        <div class="skeleton skeleton-title"></div>
+        <div class="skeleton skeleton-value"></div>
+      </div>
+      <div class="skeleton-card" style="height:140px;">
+        <div class="skeleton skeleton-title"></div>
+        <div class="skeleton skeleton-value"></div>
+      </div>
+      <div class="skeleton-card" style="height:140px;">
+        <div class="skeleton skeleton-title"></div>
+        <div class="skeleton skeleton-value"></div>
+      </div>
+    </div>
+    <!-- GRÁFICO EVOLUÇÃO DIÁRIA (COM SKELETON) -->
+    <div class="chart-card" id="chartVendasWrapper">
+      <div class="skeleton-chart">
+        <div class="skeleton skeleton-chart-title"></div>
+        <div class="skeleton skeleton-chart-body"></div>
+      </div>
     </div>
 
     <!-- DISTRIBUIÇÃO INGRESSOS -->
     <div class="chart-card">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:12px;">
         <div style="font-weight:900;color:var(--purple-dark);font-size:18px;display:flex;align-items:center;gap:8px">
           <span style="font-size:24px">🎟</span> Distribuição dos Ingressos
         </div>
@@ -634,20 +919,14 @@ td:first-child{text-align:left;padding-left:16px;}
       </div>
     </div>
 
-    <!-- SEDES + GRUPOS -->
-    <div class="row-charts">
-      <div class="chart-card">
-        <div style="font-weight:900;color:var(--purple-dark);margin-bottom:12px;font-size:18px;display:flex;align-items:center;gap:8px">
-          <span style="font-size:24px">🏟</span> Sedes
-        </div>
-        <div class="chart-wrap" style="height:260px"><canvas id="chartSedes"></canvas></div>
+    <!-- SEDES - 4 CARDS COM BARRAS -->
+    <div class="chart-card" style="margin-top:18px">
+      <div style="font-weight:900;color:var(--purple-dark);margin-bottom:16px;font-size:18px;display:flex;align-items:center;gap:8px">
+        <span style="font-size:24px">🏟️</span> Sedes - Vendas por Local
       </div>
-
-      <div class="chart-card">
-        <div style="font-weight:900;color:var(--purple-dark);margin-bottom:12px;font-size:18px;display:flex;align-items:center;gap:8px">
-          <span style="font-size:24px">🧩</span> Grupos
-        </div>
-        <div class="chart-wrap" style="height:260px"><canvas id="chartGrupos"></canvas></div>
+      
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;" id="sedesContainer">
+        <!-- Os 4 cards serão preenchidos via JavaScript -->
       </div>
     </div>
 
@@ -690,9 +969,39 @@ td:first-child{text-align:left;padding-left:16px;}
   </div> <!-- left col -->
 </div> <!-- grid -->
 
-<!-- TABELA DE JOGOS -->
+
+<!-- TOP 5 MAIORES E MENORES VENDAS -->
+<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:20px;margin-bottom:20px">
+  
+  <!-- TOP 5 MAIORES VENDAS - ROXO -->
+  <div class="chart-card" style="background:linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%);border:2px solid rgba(155,28,219,0.2);">
+    <div style="font-weight:900;color:#9b1cdb;margin-bottom:16px;font-size:18px;display:flex;align-items:center;gap:8px">
+      <span style="font-size:24px">🔥</span> Top 5 - Maiores Vendas
+    </div>
+    <div id="top5MaioresVendas" style="display:flex;flex-direction:column;gap:10px;"></div>
+  </div>
+  
+  <!-- TOP 5 MENORES VENDAS - AMARELO -->
+  <div class="chart-card" style="background:linear-gradient(135deg, #f8e847 0%, #ffed4e 100%);border:2px solid rgba(248,232,71,0.3);">
+    <div style="font-weight:900;color:#7a16af;margin-bottom:16px;font-size:18px;display:flex;align-items:center;gap:8px">
+      <span style="font-size:24px">⚠️</span> Top 5 - Menores Vendas
+    </div>
+    <div id="top5MenoresVendas" style="display:flex;flex-direction:column;gap:10px;"></div>
+  </div>
+  
+</div>
+
+<!-- TABELA DE JOGOS COM FILTRO DE RODADAS -->
 <div class="table-wrap">
-  <div class="table-title">⚽ Todos os Jogos - Detalhamento Completo</div>
+  <div class="table-header">
+    <div class="table-title">⚽ Todos os Jogos - Detalhamento Completo</div>
+    <div class="rodada-filters">
+      <button class="rodada-btn active" data-rodada="todas">Todas</button>
+      <button class="rodada-btn" data-rodada="1">1ª Rodada</button>
+      <button class="rodada-btn" data-rodada="2">2ª Rodada</button>
+      <button class="rodada-btn" data-rodada="3">3ª Rodada</button>
+    </div>
+  </div>
   <div class="table-container">
     <table id="tabelaJogos">
       <thead>
@@ -715,7 +1024,7 @@ td:first-child{text-align:left;padding-left:16px;}
   </div>
 </div>
 
-<div class="footer-note">Dashboard atualizado automaticamente • Desenvolvido para Copinha Feminina 2025</div>
+<div class="footer-note">Dashboard atualizado automaticamente • Desenvolvido para Copinha Masculina 2026</div>
 
 </div> <!-- container -->
 
@@ -730,12 +1039,43 @@ const API_URL = 'https://soudaliga.ligatechapis.com/api/public/Dash/DashBoardCop
 ============================================ */
 let jsonData = null;
 let chartVendas = null;
-let chartSedes = null;
-let chartGrupos = null;
 let chartBaseTotal = null;
 let chartAposAbertura = null;
 let chartDependentes = null;
 let distribMode = "total";
+let rodadaFiltro = "todas";
+
+/* ============================================
+   PROGRESS BAR - CONTROLES
+============================================ */
+function setProgress(percent) {
+  const progressBar = document.getElementById('progressBar');
+  progressBar.style.width = percent + '%';
+  
+  if (percent >= 100) {
+    setTimeout(() => {
+      progressBar.style.width = '0%';
+    }, 500);
+  }
+}
+
+function hideSkeletons() {
+  // Remove skeleton do gráfico de vendas
+  const chartWrapper = document.getElementById('chartVendasWrapper');
+  if (chartWrapper) {
+    const skeletonChart = chartWrapper.querySelector('.skeleton-chart');
+    if (skeletonChart) {
+      skeletonChart.remove();
+      // Adiciona o canvas real
+      chartWrapper.innerHTML = `
+        <div style="font-weight:900;color:var(--purple-dark);margin-bottom:12px;font-size:18px;display:flex;align-items:center;gap:8px">
+          <span style="font-size:24px">📊</span> Evolução Diária - Vendas, Cadastros e Faciais
+        </div>
+        <div class="chart-wrap" style="height:300px"><canvas id="chartVendasDia"></canvas></div>
+      `;
+    }
+  }
+}
 
 /* ============================================
    HELPERS
@@ -754,22 +1094,28 @@ function escapeHtml(s){
 }
 
 /* ============================================
-   CARREGAMENTO DA API
+   CARREGAMENTO DA API COM PROGRESS BAR
 ============================================ */
 async function carregarDadosAPI(){
   const btnRefresh = document.getElementById("btnRefresh");
   const loadTimestamp = document.getElementById("loadTimestamp");
   
   try {
-    // Desabilita botão e mostra loading
+    // Desabilita botão
     btnRefresh.disabled = true;
     loadTimestamp.textContent = "🔄 Carregando da API...";
     loadTimestamp.classList.add("loading");
     
+    // Inicia progress bar
+    setProgress(0);
     console.log("Iniciando carregamento da API...");
+    
+    // Simula progresso inicial
+    setProgress(10);
     
     // Faz a requisição
     const response = await fetch(API_URL);
+    setProgress(30);
     
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -777,10 +1123,16 @@ async function carregarDadosAPI(){
     
     // Parse do JSON
     jsonData = await response.json();
+    setProgress(60);
     console.log("Dados recebidos da API:", jsonData);
+    
+    // Remove skeletons
+    hideSkeletons();
+    setProgress(70);
     
     // Renderiza tudo
     renderAll();
+    setProgress(100);
     
     // Atualiza timestamp
     loadTimestamp.textContent = `✅ Dados atualizados via API • ${new Date().toLocaleString("pt-BR")}`;
@@ -789,32 +1141,28 @@ async function carregarDadosAPI(){
   } catch (error) {
     console.error("Erro ao carregar API:", error);
     
-    // Mostra erro
+    setProgress(0);
     loadTimestamp.textContent = "❌ Erro ao carregar API";
     loadTimestamp.classList.remove("loading");
     
-    // Alerta amigável
     alert(
       "❌ Não foi possível carregar os dados da API.\n\n" +
       "Erro: " + error.message
     );
     
   } finally {
-    // Reabilita botão
     btnRefresh.disabled = false;
   }
 }
 
 /* ============================================
-   NORMALIZAR DADOS - VERSÃO COMPLETA
+   NORMALIZAR DADOS
 ============================================ */
 function normalizarDados(data) {
-  // Função auxiliar para capitalizar primeira letra
   function capitalize(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
   
-  // Função para normalizar arrays de objetos
   function normalizarArray(arr) {
     if (!Array.isArray(arr)) return arr;
     return arr.map(obj => {
@@ -827,12 +1175,10 @@ function normalizarDados(data) {
     });
   }
   
-  // Se já está normalizado, retorna
   if (data.CardsInicial) {
     return data;
   }
   
-  // Normaliza a estrutura principal e os dados internos
   return {
     CardsInicial: normalizarArray(data.cardsInicial || data.CardsInicial || []),
     DadosporDia: normalizarArray(data.dadosporDia || data.DadosporDia || []),
@@ -850,7 +1196,7 @@ function normalizarDados(data) {
 }
 
 /* ============================================
-   RENDER PRINCIPAL (ATUALIZADO)
+   RENDER PRINCIPAL
 ============================================ */
 function renderAll(){
   if(!jsonData) {
@@ -858,7 +1204,6 @@ function renderAll(){
     return;
   }
   
-  // NORMALIZA OS DADOS ANTES DE RENDERIZAR
   jsonData = normalizarDados(jsonData);
   
   console.log("Dados normalizados:", jsonData);
@@ -866,10 +1211,10 @@ function renderAll(){
   try { renderCardsV3(); } catch(e){ console.error("Erro em cards:", e); }
   try { renderChartVendasDia(); } catch(e){ console.error("Erro em chartVendas:", e); }
   try { renderDistribuicao(distribMode); } catch(e){ console.error("Erro em distribuicao:", e); }
-  try { renderSedes(distribMode); } catch(e){ console.error("Erro em sedes:", e); }
-  try { renderGrupos(distribMode); } catch(e){ console.error("Erro em grupos:", e); }
+  try { renderSedesCards(); } catch(e){ console.error("Erro em sedes:", e); }
   try { renderDonutCharts(); } catch(e){ console.error("Erro em donutCharts:", e); }
-  try { renderTabelaJogos(); } catch(e){ console.error("Erro em tabelaJogos:", e); }
+  try { renderTop5Insights(); } catch(e){ console.error("Erro em top5:", e); }
+  try { renderTabelaJogos(rodadaFiltro); } catch(e){ console.error("Erro em tabelaJogos:", e); }
 }
 
 /* ============================================
@@ -937,6 +1282,72 @@ function renderCardsV3(){
 }
 
 /* ============================================
+   RENDER TOP 5 MAIORES E MENORES VENDAS
+============================================ */
+function renderTop5Insights(){
+  const jogos = jsonData.Jogos || [];
+  
+  // Ordena todos os jogos por vendidos (confirmados)
+  const todosPorVendidos = [...jogos].sort((a, b) => {
+    const vendA = Number(a.Confirmados || a.Impressos || a.ImpressosTotal || 0);
+    const vendB = Number(b.Confirmados || b.Impressos || b.ImpressosTotal || 0);
+    return vendB - vendA;
+  });
+  
+  // Top 5 Maiores Vendas - ROXO do logo (#9b1cdb)
+  const top5Maiores = todosPorVendidos.slice(0, 5);
+  document.getElementById('top5MaioresVendas').innerHTML = top5Maiores.map((j, index) => {
+    const vendidos = Number(j.Confirmados || j.Impressos || j.ImpressosTotal || 0);
+    const sede = j.Sede || j.Local || 'N/A';
+    const grupo = j.Grupo || 'N/A';
+    const dataEvento = j.DataEvento || 'Data não disponível';
+    const rodadaDupla = j.RodadaDupla || j.Rodada || '';
+    
+    // Extrai os jogos (remove a parte da rodada se tiver)
+    const jogosArray = rodadaDupla.split('|').filter(jogo => !jogo.match(/^\d+ª Rodada/i));
+    const jogosTexto = jogosArray.map(jogo => jogo.trim()).join(' | ') || 'N/A';
+    
+    return `
+      <div style="background:white;padding:12px;border-radius:10px;border-left:5px solid #9b1cdb;box-shadow:0 2px 6px rgba(155,28,219,0.15);">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
+          <span style="background:#9b1cdb;color:white;font-weight:900;font-size:11px;padding:3px 8px;border-radius:6px;">#${index + 1}</span>
+          <span style="font-size:12px;color:#9b1cdb;font-weight:800;">${formatNumber(vendidos)} vendidos</span>
+        </div>
+        <div style="font-size:11px;color:#334155;font-weight:700;margin-bottom:3px;">⚽ ${jogosTexto}</div>
+        <div style="font-size:10px;color:#64748b;font-weight:600;margin-bottom:3px;">📅 ${dataEvento}</div>
+        <div style="font-size:10px;color:#64748b;font-weight:600;">📍 ${sede} • 🧩 ${grupo}</div>
+      </div>
+    `;
+  }).join('');
+  
+  // Top 5 Menores Vendas - AMARELO do logo (#f8e847)
+  const top5Menores = todosPorVendidos.slice(-5).reverse();
+  document.getElementById('top5MenoresVendas').innerHTML = top5Menores.map((j, index) => {
+    const vendidos = Number(j.Confirmados || j.Impressos || j.ImpressosTotal || 0);
+    const sede = j.Sede || j.Local || 'N/A';
+    const grupo = j.Grupo || 'N/A';
+    const dataEvento = j.DataEvento || 'Data não disponível';
+    const rodadaDupla = j.RodadaDupla || j.Rodada || '';
+    
+    // Extrai os jogos (remove a parte da rodada se tiver)
+    const jogosArray = rodadaDupla.split('|').filter(jogo => !jogo.match(/^\d+ª Rodada/i));
+    const jogosTexto = jogosArray.map(jogo => jogo.trim()).join(' | ') || 'N/A';
+    
+    return `
+      <div style="background:white;padding:12px;border-radius:10px;border-left:5px solid #d97706;box-shadow:0 2px 6px rgba(217,119,6,0.15);">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
+          <span style="background:#d97706;color:white;font-weight:900;font-size:11px;padding:3px 8px;border-radius:6px;">#${index + 1}</span>
+          <span style="font-size:12px;color:#7a16af;font-weight:800;">${formatNumber(vendidos)} vendidos</span>
+        </div>
+        <div style="font-size:11px;color:#334155;font-weight:700;margin-bottom:3px;">⚽ ${jogosTexto}</div>
+        <div style="font-size:10px;color:#64748b;font-weight:600;margin-bottom:3px;">📅 ${dataEvento}</div>
+        <div style="font-size:10px;color:#64748b;font-weight:600;">📍 ${sede} • 🧩 ${grupo}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+/* ============================================
    GRÁFICO EVOLUÇÃO DIÁRIA
 ============================================ */
 function renderChartVendasDia(){
@@ -956,8 +1367,8 @@ function renderChartVendasDia(){
         {
           label: "Vendas",
           data: vendas,
-          backgroundColor: 'rgba(128,0,255,0.85)',
-          borderColor: 'rgba(128,0,255,1)',
+          backgroundColor: 'rgba(155,28,219,0.85)',
+          borderColor: 'rgba(155,28,219,1)',
           borderWidth: 2,
           borderRadius: 8,
           borderSkipped: false
@@ -998,7 +1409,7 @@ function renderChartVendasDia(){
           }
         },
         tooltip: {
-          backgroundColor: 'rgba(128,0,255,0.95)',
+          backgroundColor: 'rgba(155,28,219,0.95)',
           titleColor: '#fff',
           bodyColor: '#fff',
           padding: 12,
@@ -1014,7 +1425,7 @@ function renderChartVendasDia(){
       scales: {
         y: {
           beginAtZero: true,
-          grid: { color: 'rgba(128,0,255,0.08)', drawBorder: false },
+          grid: { color: 'rgba(155,28,219,0.08)', drawBorder: false },
           ticks: { color: '#6600cc', font: { weight: '600' } }
         },
         x: {
@@ -1050,124 +1461,85 @@ function renderDistribuicao(mode){
 }
 
 /* ============================================
-   GRÁFICO DE SEDES (COM FILTRO PARA PRÓXIMOS)
+   TREEMAP PARA SEDES
 ============================================ */
-function renderSedes(mode){
-  let arr = mode === "total" ? jsonData.SedesTotal || [] : jsonData.SedesProximos || [];
-  
-  // FILTRO: Remove sedes com DisponiveisProximos = 0 quando mode = "proximos"
-  if (mode === "proximos") {
-    arr = arr.filter(x => (x.DisponiveisProximos ?? 0) > 0);
-  }
-  
-  if(chartSedes) chartSedes.destroy();
-  
-  chartSedes = new Chart(document.getElementById("chartSedes"), {
-    type: 'bar',
-    data: {
-      labels: arr.map(x => x.Sede),
-      datasets: [{
-        label: "Vendidos",
-        data: arr.map(x => x.VendidosTotal ?? x.VendidosProximos ?? 0),
-        backgroundColor: 'rgba(128,0,255,0.85)',
-        borderColor: 'rgba(128,0,255,1)',
-        borderWidth: 2,
-        borderRadius: 10,
-        borderSkipped: false
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          backgroundColor: 'rgba(128,0,255,0.95)',
-          titleColor: '#fff',
-          bodyColor: '#fff',
-          padding: 12,
-          cornerRadius: 8,
-          callbacks: {
-            label: function(context) {
-              return 'Vendidos: ' + formatNumber(context.parsed.y);
-            }
-          }
-        }
-      },
-      scales: {
-        y: {
-          beginAtZero: true,
-          grid: { color: 'rgba(128,0,255,0.08)', drawBorder: false },
-          ticks: { color: '#6600cc', font: { weight: '600' } }
-        },
-        x: {
-          grid: { display: false, drawBorder: false },
-          ticks: { color: '#6600cc', font: { weight: '700', size: 12 } }
-        }
-      }
-    }
-  });
-}
-
 /* ============================================
-   GRÁFICO DE GRUPOS (COM FILTRO PARA PRÓXIMOS)
+   RENDERIZAR SEDES EM 4 CARDS COM BARRAS
 ============================================ */
-function renderGrupos(mode){
-  let arr = mode === "total" ? jsonData.GruposTotal || [] : jsonData.GruposProximos || [];
+function renderSedesCards(){
+  const jogos = jsonData.Jogos || [];
   
-  // FILTRO: Remove grupos com DisponiveisProximos = 0 quando mode = "proximos"
-  if (mode === "proximos") {
-    arr = arr.filter(x => (x.DisponiveisProximos ?? 0) > 0);
-  }
-  
-  if(chartGrupos) chartGrupos.destroy();
-  
-  chartGrupos = new Chart(document.getElementById("chartGrupos"), {
-    type: 'bar',
-    data: {
-      labels: arr.map(x => x.Grupo),
-      datasets: [{
-        label: "Vendidos",
-        data: arr.map(x => x.VendidosTotal ?? x.VendidosProximos ?? 0),
-        backgroundColor: 'rgba(255,209,0,0.85)',
-        borderColor: 'rgba(255,209,0,1)',
-        borderWidth: 2,
-        borderRadius: 10,
-        borderSkipped: false
-      }]
-    },
-    options: {
-      indexAxis: 'y',
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          backgroundColor: 'rgba(128,0,255,0.95)',
-          titleColor: '#fff',
-          bodyColor: '#fff',
-          padding: 12,
-          cornerRadius: 8,
-          callbacks: {
-            label: function(context) {
-              return 'Vendidos: ' + formatNumber(context.parsed.x);
-            }
-          }
-        }
-      },
-      scales: {
-        x: {
-          beginAtZero: true,
-          grid: { color: 'rgba(128,0,255,0.08)', drawBorder: false },
-          ticks: { color: '#6600cc', font: { weight: '600' } }
-        },
-        y: {
-          grid: { display: false, drawBorder: false },
-          ticks: { color: '#6600cc', font: { weight: '700', size: 11 } }
-        }
-      }
+  // Agrupa vendas por sede
+  const sedesMap = {};
+  jogos.forEach(j => {
+    const sede = j.Sede || j.Local || 'N/A';
+    const vendidos = Number(j.Confirmados || j.Impressos || j.ImpressosTotal || 0);
+    
+    if(!sedesMap[sede]){
+      sedesMap[sede] = 0;
     }
+    sedesMap[sede] += vendidos;
   });
+  
+  // Converte para array e ordena por vendidos (maior para menor)
+  const sedesArray = Object.entries(sedesMap)
+    .map(([sede, vendidos]) => ({ sede, vendidos }))
+    .sort((a, b) => b.vendidos - a.vendidos);
+  
+  // Pega o valor máximo para calcular a porcentagem das barras
+  const maxVendidos = sedesArray.length > 0 ? sedesArray[0].vendidos : 1;
+  
+  // Divide em 4 grupos de 8 sedes cada
+  const sedesPorCard = 8;
+  const container = document.getElementById('sedesContainer');
+  container.innerHTML = '';
+  
+  for(let cardIndex = 0; cardIndex < 4; cardIndex++){
+    const inicio = cardIndex * sedesPorCard;
+    const fim = inicio + sedesPorCard;
+    const sedesDoCard = sedesArray.slice(inicio, fim);
+    
+    // Cria o card
+    const cardDiv = document.createElement('div');
+    cardDiv.className = 'sede-card';
+    
+    // Adiciona as sedes no card
+    sedesDoCard.forEach(({ sede, vendidos }) => {
+      const porcentagem = (vendidos / maxVendidos) * 100;
+      
+      const sedeItem = document.createElement('div');
+      sedeItem.className = 'sede-item';
+      sedeItem.innerHTML = `
+        <div class="sede-nome">${sede}</div>
+        <div class="sede-bar-container">
+          <div class="sede-bar-bg">
+            <div class="sede-bar-fill" style="width:${porcentagem}%"></div>
+          </div>
+          <div class="sede-valor">${formatNumber(vendidos)}</div>
+        </div>
+      `;
+      cardDiv.appendChild(sedeItem);
+    });
+    
+    // Se não tiver 8 sedes, preenche com vazios
+    const faltam = sedesPorCard - sedesDoCard.length;
+    for(let i = 0; i < faltam; i++){
+      const sedeItem = document.createElement('div');
+      sedeItem.className = 'sede-item';
+      sedeItem.innerHTML = `
+        <div class="sede-nome" style="color:#cbd5e1;">-</div>
+        <div class="sede-bar-container">
+          <div class="sede-bar-bg">
+            <div class="sede-bar-fill" style="width:0%"></div>
+          </div>
+          <div class="sede-valor" style="color:#cbd5e1;">-</div>
+        </div>
+      `;
+      cardDiv.appendChild(sedeItem);
+    }
+    
+    container.appendChild(cardDiv);
+  }
 }
 
 /* ============================================
@@ -1196,13 +1568,13 @@ function renderDonutCharts(){
       datasets: [{
         data: [baseData.coleta, baseData.aprovadas, baseData.reprovadas, baseData.pendentes],
         backgroundColor: [
-          'rgba(128,0,255,0.85)', 
+          'rgba(155,28,219,0.85)', 
           'rgba(153,51,255,0.85)', 
           'rgba(220,53,69,0.85)', 
           'rgba(255,209,0,0.85)'
         ],
         borderColor: [
-          'rgba(128,0,255,1)', 
+          'rgba(155,28,219,1)', 
           'rgba(153,51,255,1)', 
           'rgba(220,53,69,1)', 
           'rgba(255,209,0,1)'
@@ -1217,7 +1589,7 @@ function renderDonutCharts(){
       plugins: {
         legend: { display: false },
         tooltip: {
-          backgroundColor: 'rgba(128,0,255,0.95)',
+          backgroundColor: 'rgba(155,28,219,0.95)',
           padding: 12,
           cornerRadius: 8,
           callbacks: {
@@ -1241,7 +1613,7 @@ function renderDonutCharts(){
         ctx.font = 'bold 28px Inter, sans-serif';
         ctx.fillText(formatNumber(baseData.usuarios), centerX, centerY - 10);
         ctx.font = 'bold 12px Inter, sans-serif';
-        ctx.fillStyle = '#8000ff';
+        ctx.fillStyle = '#9b1cdb';
         ctx.fillText('USUÁRIOS', centerX, centerY + 15);
         ctx.restore();
       }
@@ -1251,7 +1623,7 @@ function renderDonutCharts(){
   document.getElementById('legendBaseTotal').innerHTML = `
     <div class="legend-item">
       <span>
-        <span class="legend-color" style="background:rgba(128,0,255,0.85)"></span>
+        <span class="legend-color" style="background:rgba(155,28,219,0.85)"></span>
         <span class="legend-label">Coleta</span>
       </span>
       <span class="legend-value">${formatNumber(baseData.coleta)}</span>
@@ -1297,13 +1669,13 @@ function renderDonutCharts(){
       datasets: [{
         data: [aposData.coleta, aposData.aprovadas, aposData.reprovadas, aposData.pendentes],
         backgroundColor: [
-          'rgba(128,0,255,0.85)', 
+          'rgba(155,28,219,0.85)', 
           'rgba(153,51,255,0.85)', 
           'rgba(220,53,69,0.85)', 
           'rgba(255,209,0,0.85)'
         ],
         borderColor: [
-          'rgba(128,0,255,1)', 
+          'rgba(155,28,219,1)', 
           'rgba(153,51,255,1)', 
           'rgba(220,53,69,1)', 
           'rgba(255,209,0,1)'
@@ -1318,7 +1690,7 @@ function renderDonutCharts(){
       plugins: {
         legend: { display: false },
         tooltip: {
-          backgroundColor: 'rgba(128,0,255,0.95)',
+          backgroundColor: 'rgba(155,28,219,0.95)',
           padding: 12,
           cornerRadius: 8,
           callbacks: {
@@ -1342,7 +1714,7 @@ function renderDonutCharts(){
         ctx.font = 'bold 28px Inter, sans-serif';
         ctx.fillText(formatNumber(aposData.usuarios), centerX, centerY - 10);
         ctx.font = 'bold 12px Inter, sans-serif';
-        ctx.fillStyle = '#8000ff';
+        ctx.fillStyle = '#9b1cdb';
         ctx.fillText('USUÁRIOS', centerX, centerY + 15);
         ctx.restore();
       }
@@ -1352,7 +1724,7 @@ function renderDonutCharts(){
   document.getElementById('legendAposAbertura').innerHTML = `
     <div class="legend-item">
       <span>
-        <span class="legend-color" style="background:rgba(128,0,255,0.85)"></span>
+        <span class="legend-color" style="background:rgba(155,28,219,0.85)"></span>
         <span class="legend-label">Coleta</span>
       </span>
       <span class="legend-value">${formatNumber(aposData.coleta)}</span>
@@ -1416,7 +1788,7 @@ function renderDonutCharts(){
       plugins: {
         legend: { display: false },
         tooltip: {
-          backgroundColor: 'rgba(128,0,255,0.95)',
+          backgroundColor: 'rgba(155,28,219,0.95)',
           padding: 12,
           cornerRadius: 8,
           callbacks: {
@@ -1440,7 +1812,7 @@ function renderDonutCharts(){
         ctx.font = 'bold 28px Inter, sans-serif';
         ctx.fillText(formatNumber(depData.cadastrados), centerX, centerY - 10);
         ctx.font = 'bold 11px Inter, sans-serif';
-        ctx.fillStyle = '#8000ff';
+        ctx.fillStyle = '#9b1cdb';
         ctx.fillText('CADASTRADOS', centerX, centerY + 15);
         ctx.restore();
       }
@@ -1473,9 +1845,9 @@ function renderDonutCharts(){
 }
 
 /* ============================================
-   TABELA DE JOGOS
+   TABELA DE JOGOS COM FILTRO DE RODADAS
 ============================================ */
-function renderTabelaJogos(){
+function renderTabelaJogos(rodadaFiltrada = "todas"){
   const tbody = document.querySelector("#tabelaJogos tbody");
   if(!tbody) { 
     console.warn("Tabela de jogos não encontrada no DOM."); 
@@ -1484,11 +1856,19 @@ function renderTabelaJogos(){
   
   tbody.innerHTML = "";
 
-  const dados = (jsonData && jsonData.Jogos) ? jsonData.Jogos : [];
+  let dados = (jsonData && jsonData.Jogos) ? jsonData.Jogos : [];
+  
+  // Aplica filtro de rodada
+  if(rodadaFiltrada !== "todas"){
+    dados = dados.filter(j => {
+      const rodada = j.Rodada ?? j.rodada ?? '';
+      return String(rodada) === String(rodadaFiltrada);
+    });
+  }
   
   if(!Array.isArray(dados) || dados.length === 0){
     const tr = document.createElement("tr");
-    tr.innerHTML = `<td colspan="11" style="padding:20px;color:#666;text-align:center">Nenhum jogo encontrado no JSON.</td>`;
+    tr.innerHTML = `<td colspan="11" style="padding:20px;color:#666;text-align:center">Nenhum jogo encontrado para esta rodada.</td>`;
     tbody.appendChild(tr);
     return;
   }
@@ -1506,17 +1886,14 @@ function renderTabelaJogos(){
     const confirmados = Number(j.Confirmados ?? j.Impressos ?? j.Impresso ?? j.ImpressosTotal ?? 0);
     const acessos = Number(j.Acessos ?? 0);
     
-    // Usar ocupação do JSON se disponível, senão calcular
     let ocupacao = j.OcupacaoTotal ?? j.Ocupacao ?? '';
     if(!ocupacao){
       const total = livres + reservados + confirmados;
       ocupacao = total > 0 ? ((confirmados / total) * 100).toFixed(2) + '%' : '0.00%';
     }
     
-    // Definir classe do status
     const statusClass = statusEvento.toLowerCase().includes('encerrado') ? 'status-encerrado' : 'status-aberto';
     
-    // Formatar jogos (separar por |)
     const jogos = rodada.split('|').map(jogo => 
       `<div class="game-item">⚽ ${jogo.trim()}</div>`
     ).join('');
@@ -1547,17 +1924,13 @@ async function exportarDashboard(){
   const loadTimestamp = document.getElementById("loadTimestamp");
   
   try {
-    // Desabilita botão e mostra loading
     btnExport.disabled = true;
     btnExport.textContent = "⏳ Gerando PDF...";
     
-    // Scroll para o topo
     window.scrollTo(0, 0);
     
-    // Aguarda 500ms para garantir que tudo está renderizado
     await new Promise(resolve => setTimeout(resolve, 500));
     
-    // Captura o container principal
     const container = document.querySelector('.container');
     
     const canvas = await html2canvas(container, {
@@ -1572,11 +1945,9 @@ async function exportarDashboard(){
       scrollX: -window.scrollX
     });
     
-    // Cria o PDF
     const imgData = canvas.toDataURL('image/png', 1.0);
     const { jsPDF } = window.jspdf;
     
-    // Calcula dimensões do PDF (A4 landscape para caber melhor)
     const pdf = new jsPDF({
       orientation: 'landscape',
       unit: 'mm',
@@ -1592,7 +1963,6 @@ async function exportarDashboard(){
     let heightLeft = imgHeight;
     let position = 0;
     
-    // Adiciona a imagem ao PDF (com múltiplas páginas se necessário)
     pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight, '', 'FAST');
     heightLeft -= pdfHeight;
     
@@ -1603,14 +1973,11 @@ async function exportarDashboard(){
       heightLeft -= pdfHeight;
     }
     
-    // Gera o nome do arquivo com data/hora
     const now = new Date();
-    const filename = `Dashboard_Copinha_${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}_${String(now.getHours()).padStart(2,'0')}h${String(now.getMinutes()).padStart(2,'0')}.pdf`;
+    const filename = `Dashboard_Copinha_Masculina_2026_${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}_${String(now.getHours()).padStart(2,'0')}h${String(now.getMinutes()).padStart(2,'0')}.pdf`;
     
-    // Salva o PDF
     pdf.save(filename);
     
-    // Feedback de sucesso
     const originalText = loadTimestamp.textContent;
     const originalBg = loadTimestamp.style.background;
     const originalColor = loadTimestamp.style.color;
@@ -1629,7 +1996,6 @@ async function exportarDashboard(){
     console.error("Erro ao exportar PDF:", error);
     alert("❌ Erro ao exportar PDF: " + error.message);
   } finally {
-    // Reabilita botão
     btnExport.disabled = false;
     btnExport.textContent = "📄 Exportar PDF";
   }
@@ -1638,18 +2004,16 @@ async function exportarDashboard(){
 /* ============================================
    EVENT LISTENERS
 ============================================ */
-// Botão Atualizar (recarrega da API)
+// Botão Atualizar
 document.getElementById("btnRefresh").addEventListener("click", carregarDadosAPI);
 
-// Botão Exportar PNG
+// Botão Exportar PDF
 document.getElementById("btnExport").addEventListener("click", exportarDashboard);
 
 // Botões Total / Próximos Jogos
 document.getElementById("btnTotal").addEventListener("click", function(){
   distribMode = "total";
   renderDistribuicao("total");
-  renderSedes("total");
-  renderGrupos("total");
   document.getElementById("btnTotal").classList.add("active");
   document.getElementById("btnProximos").classList.remove("active");
 });
@@ -1657,18 +2021,36 @@ document.getElementById("btnTotal").addEventListener("click", function(){
 document.getElementById("btnProximos").addEventListener("click", function(){
   distribMode = "proximos";
   renderDistribuicao("proximos");
-  renderSedes("proximos");
-  renderGrupos("proximos");
   document.getElementById("btnProximos").classList.add("active");
   document.getElementById("btnTotal").classList.remove("active");
+});
+
+// Botões de Filtro de Rodadas
+document.querySelectorAll('.rodada-btn').forEach(btn => {
+  btn.addEventListener('click', function(){
+    // Remove active de todos
+    document.querySelectorAll('.rodada-btn').forEach(b => b.classList.remove('active'));
+    
+    // Adiciona active no clicado
+    this.classList.add('active');
+    
+    // Pega a rodada do data-attribute
+    const rodada = this.getAttribute('data-rodada');
+    rodadaFiltro = rodada;
+    
+    // Renderiza a tabela com o filtro
+    renderTabelaJogos(rodada);
+  });
 });
 
 /* ============================================
    INICIALIZAÇÃO AUTOMÁTICA
 ============================================ */
-// Carrega automaticamente ao abrir a página
 window.addEventListener("DOMContentLoaded", function(){
   console.log("Dashboard inicializado!");
+  
+  // Inicia o progress bar em 5%
+  setProgress(5);
   
   // Carrega dados da API automaticamente
   carregarDadosAPI();
