@@ -1781,7 +1781,7 @@ function renderJogosMaisBuscados(){
     
     // Extrai os jogos
     const jogosArray = rodadaDupla.split('|').filter(jogo => !jogo.match(/^\d+ª Rodada/i));
-    const jogosTexto = jogosArray.map(jogo => jogo.trim()).join(' vs ') || 'N/A';
+    const jogosTexto = jogosArray.map(jogo => jogo.trim()).join(' | ') || 'N/A';
     
     // Captura totalComprasReservas com todas as variações possíveis
     const totalComprasReservas = buscado.totalComprasReservas || buscado.TotalComprasReservas || buscado.TotalcomprasReservas || 0;
