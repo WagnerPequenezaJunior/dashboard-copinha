@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Copinha Masculina 2026 - Dashboard</title>
 
-<!-- Chart.js Treemap Plugin -->
-<script src="https://cdn.jsdelivr.net/npm/chartjs-chart-treemap@2.3.0"></script>
-
-<!-- Chart.js -->
+<!-- Chart.js - DEVE VIR PRIMEIRO -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Chart.js Treemap Plugin - DEPOIS do Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chartjs-chart-treemap@2.3.0"></script>
 
 <!-- html2canvas + jsPDF para exportar PDF -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -555,6 +555,33 @@ tbody tr:hover{
 tbody tr:last-child{
   border-bottom:none;
 }
+/* ORDENAÇÃO DA TABELA */
+th.sortable{
+  cursor:pointer;
+  user-select:none;
+  position:relative;
+  transition:background 0.2s ease;
+}
+th.sortable:hover{
+  background:rgba(155,28,219,0.08);
+}
+th.sortable::after{
+  content:'⇅';
+  position:absolute;
+  right:8px;
+  opacity:0.3;
+  font-size:12px;
+}
+th.sortable.asc::after{
+  content:'↑';
+  opacity:1;
+  color:var(--purple);
+}
+th.sortable.desc::after{
+  content:'↓';
+  opacity:1;
+  color:var(--purple);
+}
 td{
   padding:12px 10px;
   font-size:12px;
@@ -565,7 +592,7 @@ td{
 td:first-child{text-align:left;padding-left:16px;}
 .games{
   line-height:18px;
-  max-width:320px;
+  max-width:420px;
   text-align:left;
 }
 .game-item{
@@ -604,8 +631,24 @@ td:first-child{text-align:left;padding-left:16px;}
 .data-cell{
   font-weight:600;
   color:#333;
-  white-space:nowrap;
   font-size:11px;
+  white-space:normal;
+  line-height:16px;
+  min-width:85px;
+  max-width:95px;
+}
+.data-cell .date{
+  font-weight:700;
+  color:var(--purple-dark);
+  display:block;
+  font-size:11px;
+}
+.data-cell .time{
+  font-weight:600;
+  color:#666;
+  display:block;
+  font-size:10px;
+  margin-top:2px;
 }
 .status-badge{
   display:inline-block;
@@ -662,6 +705,105 @@ td:first-child{text-align:left;padding-left:16px;}
   background:rgba(155,28,219,0.06);
   padding:6px;
   border-radius:8px;
+}
+
+/* JOGOS MAIS BUSCADOS - ÚLTIMA HORA */
+.hot-games-container{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+  margin-top:20px;
+  margin-bottom:20px;
+}
+.hot-game-card{
+  background:linear-gradient(135deg, #fff 0%, #faf8ff 100%);
+  border:2px solid rgba(155,28,219,0.2);
+  border-radius:14px;
+  padding:16px;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 4px 12px rgba(155,28,219,0.12);
+  transition:all 0.3s ease;
+}
+.hot-game-card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 8px 20px rgba(155,28,219,0.25);
+  border-color:rgba(155,28,219,0.4);
+}
+.hot-game-card::before{
+  content:'🔥';
+  position:absolute;
+  top:8px;
+  right:8px;
+  font-size:28px;
+  opacity:0.15;
+  animation:pulse-fire 2s ease-in-out infinite;
+}
+@keyframes pulse-fire {
+  0%, 100% { transform:scale(1); opacity:0.15; }
+  50% { transform:scale(1.1); opacity:0.25; }
+}
+.hot-game-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:10px;
+  padding-bottom:8px;
+  border-bottom:2px solid rgba(155,28,219,0.15);
+}
+.hot-game-codigo{
+  background:linear-gradient(135deg, var(--purple) 0%, var(--purple-dark) 100%);
+  color:white;
+  font-weight:900;
+  font-size:13px;
+  padding:5px 12px;
+  border-radius:8px;
+  box-shadow:0 2px 6px rgba(155,28,219,0.3);
+}
+.hot-game-badge{
+  background:linear-gradient(135deg, var(--accent) 0%, #ffed4e 100%);
+  color:var(--purple-dark);
+  font-weight:900;
+  font-size:11px;
+  padding:4px 10px;
+  border-radius:6px;
+  letter-spacing:0.5px;
+  box-shadow:0 2px 6px rgba(248,232,71,0.3);
+}
+.hot-game-info{
+  font-size:11px;
+  color:#333;
+  margin-bottom:8px;
+  line-height:16px;
+}
+.hot-game-info strong{
+  color:var(--purple-dark);
+  font-weight:700;
+}
+.hot-game-stats{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:6px;
+  margin-top:10px;
+}
+.hot-stat{
+  background:rgba(155,28,219,0.03);
+  border:1px solid rgba(155,28,219,0.1);
+  padding:6px;
+  border-radius:6px;
+  text-align:center;
+  font-size:10px;
+}
+.hot-stat-label{
+  color:#666;
+  font-weight:600;
+  display:block;
+  margin-bottom:2px;
+}
+.hot-stat-value{
+  color:var(--purple);
+  font-weight:900;
+  font-size:13px;
 }
 
 /* SEDES - CARDS COM BARRAS */
@@ -722,6 +864,115 @@ td:first-child{text-align:left;padding-left:16px;}
   color:#9b1cdb;
   min-width:35px;
   text-align:right;
+}
+
+/* DISTRIBUIÇÃO GEOGRÁFICA */
+.geo-cards-container{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:14px;
+  margin-top:18px;
+}
+.geo-card{
+  background:linear-gradient(135deg, #fff 0%, #f8f5ff 100%);
+  border-radius:14px;
+  padding:18px;
+  border:2px solid rgba(155,28,219,0.12);
+  box-shadow:0 2px 8px rgba(155,28,219,0.08);
+  transition:all 0.3s ease;
+}
+.geo-card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 8px 20px rgba(155,28,219,0.15);
+  border-color:rgba(155,28,219,0.3);
+}
+.geo-card-title{
+  font-weight:900;
+  color:var(--purple-dark);
+  font-size:14px;
+  margin-bottom:14px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  text-transform:uppercase;
+  letter-spacing:0.5px;
+}
+.geo-resumo{
+  text-align:center;
+  padding:10px 0;
+}
+.geo-resumo-number{
+  font-size:42px;
+  font-weight:900;
+  background:linear-gradient(135deg, var(--purple) 0%, var(--purple-light) 100%);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  line-height:1;
+  margin-bottom:4px;
+}
+.geo-resumo-label{
+  font-size:11px;
+  font-weight:800;
+  color:var(--purple);
+  text-transform:uppercase;
+  letter-spacing:0.8px;
+  margin-bottom:16px;
+}
+.geo-resumo-text{
+  font-size:11px;
+  color:#64748b;
+  line-height:16px;
+  font-weight:600;
+  margin-top:8px;
+}
+.geo-list{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.geo-item{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:8px 10px;
+  background:rgba(155,28,219,0.03);
+  border-radius:8px;
+  border:1px solid rgba(155,28,219,0.08);
+  transition:all 0.2s ease;
+}
+.geo-item:hover{
+  background:rgba(155,28,219,0.08);
+  border-color:rgba(155,28,219,0.15);
+}
+.geo-item-pos{
+  background:linear-gradient(135deg, var(--purple) 0%, var(--purple-dark) 100%);
+  color:white;
+  font-weight:900;
+  font-size:10px;
+  width:22px;
+  height:22px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+}
+.geo-item-name{
+  flex:1;
+  font-size:11px;
+  font-weight:700;
+  color:#334155;
+  margin-left:10px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.geo-item-percent{
+  font-size:12px;
+  font-weight:900;
+  color:var(--purple);
+  flex-shrink:0;
 }
 
 /* FOOTER */
@@ -966,9 +1217,66 @@ td:first-child{text-align:left;padding-left:16px;}
       </div>
     </div>
 
+    <!-- DISTRIBUIÇÃO GEOGRÁFICA -->
+    <div class="chart-card" style="margin-top:18px">
+      <div style="font-weight:900;color:var(--purple-dark);margin-bottom:16px;font-size:18px;display:flex;align-items:center;gap:8px">
+        <span style="font-size:24px">🗺️</span> Distribuição Geográfica
+      </div>
+      
+      <div class="geo-cards-container" id="geoCardsContainer">
+        <!-- Card 1: Resumo -->
+        <div class="geo-card">
+          <div class="geo-card-title">📊 Resumo</div>
+          <div class="geo-resumo">
+            <div class="geo-resumo-number" id="geoCidadesTotal">0</div>
+            <div class="geo-resumo-label">Cidades</div>
+            <div style="height:20px;"></div>
+            <div class="geo-resumo-number" id="geoEstadosTotal">0</div>
+            <div class="geo-resumo-label">Estados</div>
+            <div class="geo-resumo-text" id="geoResumoTexto">Cadastros distribuídos por todo estado</div>
+          </div>
+        </div>
+        
+        <!-- Card 2: Top 5 Cidades -->
+        <div class="geo-card">
+          <div class="geo-card-title">🏙️ Top 5 Cidades</div>
+          <div class="geo-list" id="geoCidadesTop5"></div>
+        </div>
+        
+        <!-- Card 3: Top 6-10 Cidades -->
+        <div class="geo-card">
+          <div class="geo-card-title">🏙️ Top 6-10 Cidades</div>
+          <div class="geo-list" id="geoCidadesTop610"></div>
+        </div>
+        
+        <!-- Card 4: Top 5 Estados -->
+        <div class="geo-card">
+          <div class="geo-card-title">🗺️ Top 5 Estados</div>
+          <div class="geo-list" id="geoEstadosTop5"></div>
+        </div>
+      </div>
+    </div>
+
   </div> <!-- left col -->
 </div> <!-- grid -->
 
+
+<!-- JOGOS MAIS BUSCADOS NA ÚLTIMA HORA -->
+<div id="secaoJogosBuscados" style="margin-top:20px;margin-bottom:10px;display:none;">
+  <div style="background:linear-gradient(135deg, var(--purple) 0%, var(--purple-dark) 100%);color:white;padding:14px 20px;border-radius:12px;margin-bottom:14px;box-shadow:0 4px 12px rgba(155,28,219,0.3);">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <span style="font-size:32px;animation:pulse-fire 2s ease-in-out infinite;">🔥</span>
+      <div>
+        <div style="font-weight:900;font-size:20px;letter-spacing:0.5px;">JOGOS MAIS BUSCADOS</div>
+        <div style="font-size:12px;opacity:0.95;font-weight:600;">Última Hora - Tempo Real</div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="hot-games-container" id="jogosMaisBuscados">
+    <!-- Os 3 jogos mais buscados serão preenchidos via JavaScript -->
+  </div>
+</div>
 
 <!-- TOP 5 MAIORES E MENORES VENDAS -->
 <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:20px;margin-bottom:20px">
@@ -996,7 +1304,7 @@ td:first-child{text-align:left;padding-left:16px;}
   <div class="table-header">
     <div class="table-title">⚽ Todos os Jogos - Detalhamento Completo</div>
     <div class="rodada-filters">
-      <button class="rodada-btn active" data-rodada="todas">Todas</button>
+      <button class="rodada-btn" data-rodada="todas">Todas</button>
       <button class="rodada-btn" data-rodada="1">1ª Rodada</button>
       <button class="rodada-btn" data-rodada="2">2ª Rodada</button>
       <button class="rodada-btn" data-rodada="3">3ª Rodada</button>
@@ -1007,16 +1315,16 @@ td:first-child{text-align:left;padding-left:16px;}
       <thead>
         <tr>
           <th style="text-align:left">Código</th>
-          <th style="text-align:left">Sede</th>
-          <th style="text-align:left">Grupo</th>
+          <th class="sortable" data-column="sede" style="text-align:left">Sede</th>
+          <th class="sortable" data-column="grupo" style="text-align:left">Grupo</th>
           <th style="text-align:left">Jogos</th>
-          <th>Data/Hora</th>
-          <th>Livre</th>
-          <th>Reservado</th>
-          <th>Confirmado</th>
-          <th>Acessos</th>
-          <th>Ocupação</th>
-          <th>Status</th>
+          <th class="sortable" data-column="data" style="text-align:center">Data/Hora</th>
+          <th class="sortable" data-column="livre" style="text-align:center">Livre</th>
+          <th class="sortable" data-column="reservado" style="text-align:center">Reservado</th>
+          <th class="sortable" data-column="confirmado" style="text-align:center">Confirmado</th>
+          <th class="sortable" data-column="acessos" style="text-align:center">Acessos</th>
+          <th class="sortable" data-column="ocupacao" style="text-align:center">Ocupação</th>
+          <th class="sortable" data-column="status" style="text-align:center">Status</th>
         </tr>
       </thead>
       <tbody></tbody>
@@ -1043,7 +1351,10 @@ let chartBaseTotal = null;
 let chartAposAbertura = null;
 let chartDependentes = null;
 let distribMode = "total";
-let rodadaFiltro = "todas";
+let rodadaFiltro = null; // Começa null para não renderizar tabela inicialmente
+let sortColumn = null; // Coluna de ordenação atual
+let sortDirection = 'asc'; // Direção de ordenação atual
+let dadosOriginais = []; // Guarda os dados originais para ordenação
 
 /* ============================================
    PROGRESS BAR - CONTROLES
@@ -1191,7 +1502,10 @@ function normalizarDados(data) {
     UsuariosCadastrados: normalizarArray(data.usuariosCadastrados || data.UsuariosCadastrados || []),
     Dependentes: normalizarArray(data.dependentes || data.Dependentes || []),
     FaciaisAposAberturadosJogos: normalizarArray(data.faciaisAposAberturadosJogos || data.FaciaisAposAberturadosJogos || []),
-    Jogos: normalizarArray(data.jogos || data.Jogos || [])
+    Jogos: normalizarArray(data.jogos || data.Jogos || []),
+    jogosMaisBuscadosUltimaHora: normalizarArray(data.jogosMaisBuscadosUltimaHora || data.JogosMaisBuscadosUltimaHora || []),
+    distribuicaoGeograficaCidades: normalizarArray(data.distribuicaoGeograficaCidades || data.DistribuicaoGeograficaCidades || []),
+    distribuicaoGeograficaEstados: normalizarArray(data.distribuicaoGeograficaEstados || data.DistribuicaoGeograficaEstados || [])
   };
 }
 
@@ -1213,6 +1527,8 @@ function renderAll(){
   try { renderDistribuicao(distribMode); } catch(e){ console.error("Erro em distribuicao:", e); }
   try { renderSedesCards(); } catch(e){ console.error("Erro em sedes:", e); }
   try { renderDonutCharts(); } catch(e){ console.error("Erro em donutCharts:", e); }
+  try { renderDistribuicaoGeografica(); } catch(e){ console.error("Erro em distribuicaoGeografica:", e); }
+  try { renderJogosMaisBuscados(); } catch(e){ console.error("Erro em jogosMaisBuscados:", e); }
   try { renderTop5Insights(); } catch(e){ console.error("Erro em top5:", e); }
   try { renderTabelaJogos(rodadaFiltro); } catch(e){ console.error("Erro em tabelaJogos:", e); }
 }
@@ -1282,6 +1598,255 @@ function renderCardsV3(){
 }
 
 /* ============================================
+   RENDER DISTRIBUIÇÃO GEOGRÁFICA
+============================================ */
+function renderDistribuicaoGeografica(){
+  console.log("=== RENDER DISTRIBUIÇÃO GEOGRÁFICA ===");
+  console.log("jsonData completo:", jsonData);
+  
+  const cidades = jsonData.distribuicaoGeograficaCidades || jsonData.DistribuicaoGeograficaCidades || [];
+  const estados = jsonData.distribuicaoGeograficaEstados || jsonData.DistribuicaoGeograficaEstados || [];
+  
+  console.log("Cidades encontradas:", cidades);
+  console.log("Estados encontrados:", estados);
+  
+  if(!cidades || cidades.length === 0){
+    console.warn("Nenhuma cidade encontrada nos dados");
+  }
+  if(!estados || estados.length === 0){
+    console.warn("Nenhum estado encontrado nos dados");
+  }
+  
+  // Card 1: Resumo
+  const totalCidades = cidades.length > 0 ? (cidades[0].totalCidades || cidades[0].TotalCidades || cidades.length) : 0;
+  const totalEstados = estados.length > 0 ? (estados[0].totalEstados || estados[0].TotalEstados || estados.length) : 0;
+  
+  console.log("Total Cidades:", totalCidades);
+  console.log("Total Estados:", totalEstados);
+  
+  const cidadesTotalEl = document.getElementById('geoCidadesTotal');
+  const estadosTotalEl = document.getElementById('geoEstadosTotal');
+  const resumoTextoEl = document.getElementById('geoResumoTexto');
+  
+  if(cidadesTotalEl) cidadesTotalEl.textContent = totalCidades;
+  if(estadosTotalEl) estadosTotalEl.textContent = totalEstados;
+  
+  // Atualiza texto do resumo baseado nos dados
+  const estadoPrincipal = estados.length > 0 ? (estados[0].estado || estados[0].Estado || '') : '';
+  const percentualPrincipal = estados.length > 0 ? (estados[0].percentual || estados[0].Percentual || '') : '';
+  
+  console.log("Estado Principal:", estadoPrincipal, "Percentual:", percentualPrincipal);
+  
+  if(estadoPrincipal && percentualPrincipal && resumoTextoEl){
+    resumoTextoEl.textContent = `${percentualPrincipal} dos cadastros em ${estadoPrincipal}`;
+  }
+  
+  // Card 2: Top 5 Cidades (posições 1-5)
+  const top5Cidades = cidades.slice(0, 5);
+  const cidadesTop5El = document.getElementById('geoCidadesTop5');
+  
+  if(cidadesTop5El){
+    cidadesTop5El.innerHTML = top5Cidades.map((cidade, index) => {
+      const nomeCidade = cidade.cidade || cidade.Cidade || 'N/A';
+      const percentual = cidade.percentual || cidade.Percentual || '0%';
+      return `
+        <div class="geo-item">
+          <div class="geo-item-pos">${index + 1}</div>
+          <div class="geo-item-name" title="${nomeCidade}">${nomeCidade}</div>
+          <div class="geo-item-percent">${percentual}</div>
+        </div>
+      `;
+    }).join('');
+  }
+  
+  // Card 3: Top 6-10 Cidades (posições 6-10)
+  const top610Cidades = cidades.slice(5, 10);
+  const cidadesTop610El = document.getElementById('geoCidadesTop610');
+  
+  if(cidadesTop610El){
+    cidadesTop610El.innerHTML = top610Cidades.map((cidade, index) => {
+      const nomeCidade = cidade.cidade || cidade.Cidade || 'N/A';
+      const percentual = cidade.percentual || cidade.Percentual || '0%';
+      return `
+        <div class="geo-item">
+          <div class="geo-item-pos">${index + 6}</div>
+          <div class="geo-item-name" title="${nomeCidade}">${nomeCidade}</div>
+          <div class="geo-item-percent">${percentual}</div>
+        </div>
+      `;
+    }).join('');
+  }
+  
+  // Card 4: Top 5 Estados
+  const top5Estados = estados.slice(0, 5);
+  const estadosTop5El = document.getElementById('geoEstadosTop5');
+  
+  if(estadosTop5El){
+    estadosTop5El.innerHTML = top5Estados.map((estado, index) => {
+      const nomeEstado = estado.estado || estado.Estado || 'N/A';
+      const percentual = estado.percentual || estado.Percentual || '0%';
+      return `
+        <div class="geo-item">
+          <div class="geo-item-pos">${index + 1}</div>
+          <div class="geo-item-name">${nomeEstado}</div>
+          <div class="geo-item-percent">${percentual}</div>
+        </div>
+      `;
+    }).join('');
+  }
+  
+  console.log("=== DISTRIBUIÇÃO GEOGRÁFICA RENDERIZADA ===");
+}
+
+/* ============================================
+   RENDER JOGOS MAIS BUSCADOS NA ÚLTIMA HORA
+============================================ */
+function renderJogosMaisBuscados(){
+  const container = document.getElementById('jogosMaisBuscados');
+  const secao = document.getElementById('secaoJogosBuscados');
+  
+  if(!container || !secao) {
+    console.warn("Container ou seção de jogos mais buscados não encontrado");
+    return;
+  }
+  
+  console.log("=== RENDER JOGOS MAIS BUSCADOS ===");
+  console.log("jsonData:", jsonData);
+  
+  const jogosBuscados = jsonData.jogosMaisBuscadosUltimaHora || [];
+  const todosJogos = jsonData.Jogos || [];
+  
+  console.log("Jogos buscados:", jogosBuscados);
+  console.log("Total de jogos disponíveis:", todosJogos.length);
+  
+  if(!jogosBuscados || jogosBuscados.length === 0){
+    // Esconde a seção completa quando não tem dados
+    secao.style.display = 'none';
+    console.log("Nenhum jogo buscado encontrado - seção escondida");
+    return;
+  }
+  
+  // Mostra a seção quando tem dados
+  secao.style.display = 'block';
+  
+  // Busca os 3 jogos mais buscados (pega no máximo 3)
+  const top3 = jogosBuscados.slice(0, 3);
+  console.log("Top 3 jogos buscados:", top3);
+  
+  container.innerHTML = top3.map((buscado, index) => {
+    console.log(`Processando jogo buscado #${index + 1}:`, buscado);
+    
+    // Tenta encontrar o jogo de várias formas
+    const codigoBuscado = buscado.codigoEVE || buscado.CodigoEVE;
+    console.log(`Procurando jogo com código: ${codigoBuscado}`);
+    
+    const jogo = todosJogos.find(j => {
+      const codigoJogo = j.CodigoEVE || j.codigoEVE;
+      return Number(codigoJogo) === Number(codigoBuscado);
+    });
+    
+    console.log(`Jogo encontrado:`, jogo);
+    
+    if(!jogo){
+      console.warn(`Jogo com código ${codigoBuscado} não encontrado na lista`);
+      return `<div class="hot-game-card">
+        <div style="text-align:center;padding:20px;">
+          <div style="font-size:24px;margin-bottom:10px;">⚠️</div>
+          <div style="color:#999;font-size:12px;">Jogo #${codigoBuscado}</div>
+          <div style="color:#999;font-size:11px;margin-top:5px;">Dados não encontrados</div>
+        </div>
+      </div>`;
+    }
+    
+    const codigo = jogo.CodigoEVE || jogo.codigoEVE || '';
+    const sede = jogo.Sede || jogo.Local || 'N/A';
+    const grupo = jogo.Grupo || 'N/A';
+    const rodadaDupla = jogo.RodadaDupla || jogo.Rodada || '';
+    const dataEvento = jogo.DataEvento || '';
+    
+    // Separar data e hora
+    let dataFormatada = dataEvento;
+    let horaFormatada = '';
+    if(dataEvento && dataEvento.includes(' ')){
+      const partes = dataEvento.split(' ');
+      dataFormatada = partes[0];
+      horaFormatada = partes.slice(1).join(' ');
+    }
+    
+    const livres = Number(jogo.Livres || jogo.Livre || jogo.LivresTotal || 0);
+    const reservados = Number(jogo.Reservados || jogo.Reservado || 0);
+    const confirmados = Number(jogo.Confirmados || jogo.Impressos || jogo.Impresso || jogo.ImpressosTotal || 0);
+    const total = livres + reservados + confirmados;
+    const ocupacao = total > 0 ? ((confirmados / total) * 100).toFixed(1) + '%' : '0%';
+    
+    // Extrai os jogos
+    const jogosArray = rodadaDupla.split('|').filter(jogo => !jogo.match(/^\d+ª Rodada/i));
+    const jogosTexto = jogosArray.map(jogo => jogo.trim()).join(' vs ') || 'N/A';
+    
+    // Captura totalComprasReservas com todas as variações possíveis
+    const totalComprasReservas = buscado.totalComprasReservas || buscado.TotalComprasReservas || buscado.TotalcomprasReservas || 0;
+    
+    const badges = ['#1 🥇', '#2 🥈', '#3 🥉'];
+    
+    console.log(`Card #${index + 1}:`);
+    console.log(`  - Código: ${codigo}`);
+    console.log(`  - Jogos: ${jogosTexto}`);
+    console.log(`  - Objeto buscado completo:`, buscado);
+    console.log(`  - Total Compras/Reservas: ${totalComprasReservas}`);
+    
+    return `
+      <div class="hot-game-card">
+        <div class="hot-game-header">
+          <div class="hot-game-codigo">#${codigo}</div>
+          <div class="hot-game-badge">${badges[index] || '#' + (index + 1)}</div>
+        </div>
+        
+        <div class="hot-game-info">
+          <strong>⚽ ${jogosTexto}</strong>
+        </div>
+        
+        <div class="hot-game-info">
+          📍 <strong>Sede:</strong> ${sede}<br>
+          🧩 <strong>Grupo:</strong> ${grupo}
+        </div>
+        
+        <div class="hot-game-info" style="padding-bottom:8px;margin-bottom:8px;border-bottom:1px solid rgba(255,82,82,0.15);">
+          📅 ${dataFormatada}<br>
+          ${horaFormatada ? `⏰ ${horaFormatada}` : ''}
+        </div>
+        
+        <div class="hot-game-stats">
+          <div class="hot-stat">
+            <span class="hot-stat-label">Livre</span>
+            <span class="hot-stat-value">${formatNumber(livres)}</span>
+          </div>
+          <div class="hot-stat">
+            <span class="hot-stat-label">Reservado</span>
+            <span class="hot-stat-value">${formatNumber(reservados)}</span>
+          </div>
+          <div class="hot-stat">
+            <span class="hot-stat-label">Confirmado</span>
+            <span class="hot-stat-value">${formatNumber(confirmados)}</span>
+          </div>
+          <div class="hot-stat">
+            <span class="hot-stat-label">Ocupação</span>
+            <span class="hot-stat-value">${ocupacao}</span>
+          </div>
+        </div>
+        
+        <div style="margin-top:12px;background:linear-gradient(135deg, var(--purple) 0%, var(--purple-dark) 100%);color:white;padding:10px;border-radius:8px;text-align:center;box-shadow:0 3px 10px rgba(155,28,219,0.3);">
+          <div style="font-size:10px;font-weight:700;opacity:0.9;margin-bottom:4px;">🔥 ÚLTIMA HORA</div>
+          <div style="font-size:20px;font-weight:900;">${formatNumber(totalComprasReservas)}</div>
+          <div style="font-size:9px;font-weight:600;opacity:0.85;margin-top:2px;">Compras + Reservas</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+  
+  console.log("=== RENDER JOGOS MAIS BUSCADOS CONCLUÍDO ===");
+}
+
+/* ============================================
    RENDER TOP 5 MAIORES E MENORES VENDAS
 ============================================ */
 function renderTop5Insights(){
@@ -1298,6 +1863,11 @@ function renderTop5Insights(){
   const top5Maiores = todosPorVendidos.slice(0, 5);
   document.getElementById('top5MaioresVendas').innerHTML = top5Maiores.map((j, index) => {
     const vendidos = Number(j.Confirmados || j.Impressos || j.ImpressosTotal || 0);
+    const livres = Number(j.Livres || j.Livre || j.LivresTotal || 0);
+    const reservados = Number(j.Reservados || j.Reservado || 0);
+    const total = livres + reservados + vendidos;
+    const ocupacao = total > 0 ? ((vendidos / total) * 100).toFixed(1) + '%' : '0%';
+    
     const sede = j.Sede || j.Local || 'N/A';
     const grupo = j.Grupo || 'N/A';
     const dataEvento = j.DataEvento || 'Data não disponível';
@@ -1309,9 +1879,12 @@ function renderTop5Insights(){
     
     return `
       <div style="background:white;padding:12px;border-radius:10px;border-left:5px solid #9b1cdb;box-shadow:0 2px 6px rgba(155,28,219,0.15);">
-        <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
-          <span style="background:#9b1cdb;color:white;font-weight:900;font-size:11px;padding:3px 8px;border-radius:6px;">#${index + 1}</span>
-          <span style="font-size:12px;color:#9b1cdb;font-weight:800;">${formatNumber(vendidos)} vendidos</span>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span style="background:#9b1cdb;color:white;font-weight:900;font-size:11px;padding:3px 8px;border-radius:6px;">#${index + 1}</span>
+            <span style="font-size:12px;color:#9b1cdb;font-weight:800;">${formatNumber(vendidos)} vendidos</span>
+          </div>
+          <span style="background:rgba(155,28,219,0.1);color:#9b1cdb;font-weight:900;font-size:11px;padding:3px 8px;border-radius:6px;">📊 ${ocupacao}</span>
         </div>
         <div style="font-size:11px;color:#334155;font-weight:700;margin-bottom:3px;">⚽ ${jogosTexto}</div>
         <div style="font-size:10px;color:#64748b;font-weight:600;margin-bottom:3px;">📅 ${dataEvento}</div>
@@ -1324,6 +1897,11 @@ function renderTop5Insights(){
   const top5Menores = todosPorVendidos.slice(-5).reverse();
   document.getElementById('top5MenoresVendas').innerHTML = top5Menores.map((j, index) => {
     const vendidos = Number(j.Confirmados || j.Impressos || j.ImpressosTotal || 0);
+    const livres = Number(j.Livres || j.Livre || j.LivresTotal || 0);
+    const reservados = Number(j.Reservados || j.Reservado || 0);
+    const total = livres + reservados + vendidos;
+    const ocupacao = total > 0 ? ((vendidos / total) * 100).toFixed(1) + '%' : '0%';
+    
     const sede = j.Sede || j.Local || 'N/A';
     const grupo = j.Grupo || 'N/A';
     const dataEvento = j.DataEvento || 'Data não disponível';
@@ -1335,9 +1913,12 @@ function renderTop5Insights(){
     
     return `
       <div style="background:white;padding:12px;border-radius:10px;border-left:5px solid #d97706;box-shadow:0 2px 6px rgba(217,119,6,0.15);">
-        <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
-          <span style="background:#d97706;color:white;font-weight:900;font-size:11px;padding:3px 8px;border-radius:6px;">#${index + 1}</span>
-          <span style="font-size:12px;color:#7a16af;font-weight:800;">${formatNumber(vendidos)} vendidos</span>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span style="background:#d97706;color:white;font-weight:900;font-size:11px;padding:3px 8px;border-radius:6px;">#${index + 1}</span>
+            <span style="font-size:12px;color:#7a16af;font-weight:800;">${formatNumber(vendidos)} vendidos</span>
+          </div>
+          <span style="background:rgba(217,119,6,0.1);color:#d97706;font-weight:900;font-size:11px;padding:3px 8px;border-radius:6px;">📊 ${ocupacao}</span>
         </div>
         <div style="font-size:11px;color:#334155;font-weight:700;margin-bottom:3px;">⚽ ${jogosTexto}</div>
         <div style="font-size:10px;color:#64748b;font-weight:600;margin-bottom:3px;">📅 ${dataEvento}</div>
@@ -1845,9 +2426,9 @@ function renderDonutCharts(){
 }
 
 /* ============================================
-   TABELA DE JOGOS COM FILTRO DE RODADAS
+   TABELA DE JOGOS COM FILTRO DE RODADAS E ORDENAÇÃO
 ============================================ */
-function renderTabelaJogos(rodadaFiltrada = "todas"){
+function renderTabelaJogos(rodadaFiltrada = "todas", aplicarOrdenacao = true){
   const tbody = document.querySelector("#tabelaJogos tbody");
   if(!tbody) { 
     console.warn("Tabela de jogos não encontrada no DOM."); 
@@ -1855,8 +2436,27 @@ function renderTabelaJogos(rodadaFiltrada = "todas"){
   }
   
   tbody.innerHTML = "";
+  
+  // Se rodadaFiltrada for null, mostra mensagem inicial
+  if(rodadaFiltrada === null){
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td colspan="11" style="padding:40px 20px;text-align:center;">
+        <div style="font-size:48px;margin-bottom:12px;">⚽</div>
+        <div style="font-size:16px;font-weight:700;color:var(--purple-dark);margin-bottom:8px;">Selecione uma rodada para visualizar</div>
+        <div style="font-size:13px;color:#64748b;">👆 Use os filtros acima para exibir os jogos</div>
+      </td>
+    `;
+    tbody.appendChild(tr);
+    return;
+  }
 
-  let dados = (jsonData && jsonData.Jogos) ? jsonData.Jogos : [];
+  let dados = (jsonData && jsonData.Jogos) ? [...jsonData.Jogos] : [];
+  
+  // Salva dados originais se ainda não tiver
+  if(dadosOriginais.length === 0 && dados.length > 0){
+    dadosOriginais = [...dados];
+  }
   
   // Aplica filtro de rodada
   if(rodadaFiltrada !== "todas"){
@@ -1866,9 +2466,76 @@ function renderTabelaJogos(rodadaFiltrada = "todas"){
     });
   }
   
+  // Aplica ordenação se houver coluna selecionada
+  if(aplicarOrdenacao && sortColumn){
+    dados.sort((a, b) => {
+      let valA, valB;
+      
+      switch(sortColumn){
+        case 'sede':
+          valA = (a.Sede || a.Local || '').toLowerCase();
+          valB = (b.Sede || b.Local || '').toLowerCase();
+          break;
+        case 'grupo':
+          valA = (a.Grupo || '').toLowerCase();
+          valB = (b.Grupo || '').toLowerCase();
+          break;
+        case 'data':
+          valA = a.DataEvento || '';
+          valB = b.DataEvento || '';
+          break;
+        case 'livre':
+          valA = Number(a.Livres || a.Livre || a.LivresTotal || 0);
+          valB = Number(b.Livres || b.Livre || b.LivresTotal || 0);
+          break;
+        case 'reservado':
+          valA = Number(a.Reservados || a.Reservado || 0);
+          valB = Number(b.Reservados || b.Reservado || 0);
+          break;
+        case 'confirmado':
+          valA = Number(a.Confirmados || a.Impressos || a.ImpressosTotal || 0);
+          valB = Number(b.Confirmados || b.Impressos || b.ImpressosTotal || 0);
+          break;
+        case 'acessos':
+          valA = Number(a.Acessos || 0);
+          valB = Number(b.Acessos || 0);
+          break;
+        case 'ocupacao':
+          const livresA = Number(a.Livres || a.Livre || a.LivresTotal || 0);
+          const reservadosA = Number(a.Reservados || a.Reservado || 0);
+          const confirmadosA = Number(a.Confirmados || a.Impressos || a.ImpressosTotal || 0);
+          const totalA = livresA + reservadosA + confirmadosA;
+          valA = totalA > 0 ? (confirmadosA / totalA) * 100 : 0;
+          
+          const livresB = Number(b.Livres || b.Livre || b.LivresTotal || 0);
+          const reservadosB = Number(b.Reservados || b.Reservado || 0);
+          const confirmadosB = Number(b.Confirmados || b.Impressos || b.ImpressosTotal || 0);
+          const totalB = livresB + reservadosB + confirmadosB;
+          valB = totalB > 0 ? (confirmadosB / totalB) * 100 : 0;
+          break;
+        case 'status':
+          valA = (a.StatusEvento || '').toLowerCase();
+          valB = (b.StatusEvento || '').toLowerCase();
+          break;
+        default:
+          return 0;
+      }
+      
+      // Comparação
+      let comparison = 0;
+      if(typeof valA === 'string'){
+        comparison = valA.localeCompare(valB);
+      } else {
+        comparison = valA - valB;
+      }
+      
+      return sortDirection === 'asc' ? comparison : -comparison;
+    });
+  }
+  
   if(!Array.isArray(dados) || dados.length === 0){
     const tr = document.createElement("tr");
-    tr.innerHTML = `<td colspan="11" style="padding:20px;color:#666;text-align:center">Nenhum jogo encontrado para esta rodada.</td>`;
+    tr.innerHTML = `<td colspan="11" style="padding:30px;color:#666;text-align:center;font-size:14px;">📭 Nenhum jogo encontrado para esta rodada.</td>`;
     tbody.appendChild(tr);
     return;
   }
@@ -1880,6 +2547,15 @@ function renderTabelaJogos(rodadaFiltrada = "todas"){
     const rodada = j.RodadaDupla ?? j.Rodada ?? '';
     const dataEvento = j.DataEvento ?? '';
     const statusEvento = j.StatusEvento ?? 'Desconhecido';
+    
+    // Separar data e hora
+    let dataFormatada = dataEvento;
+    let horaFormatada = '';
+    if(dataEvento && dataEvento.includes(' ')){
+      const partes = dataEvento.split(' ');
+      dataFormatada = partes[0]; // Primeira parte: data
+      horaFormatada = partes.slice(1).join(' '); // Resto: hora
+    }
     
     const livres = Number(j.Livres ?? j.Livre ?? j.LivresTotal ?? 0);
     const reservados = Number(j.Reservados ?? j.Reservado ?? 0);
@@ -1904,7 +2580,10 @@ function renderTabelaJogos(rodadaFiltrada = "todas"){
       <td class="sede-cell"><span>📍</span>${escapeHtml(sede)}</td>
       <td class="grupo-cell">${escapeHtml(grupo)}</td>
       <td class="games">${jogos}</td>
-      <td class="data-cell">${escapeHtml(dataEvento)}</td>
+      <td class="data-cell">
+        <span class="date">${escapeHtml(dataFormatada)}</span>
+        ${horaFormatada ? `<span class="time">⏰ ${escapeHtml(horaFormatada)}</span>` : ''}
+      </td>
       <td><span class="number-cell number-green">${formatNumber(livres)}</span></td>
       <td><span class="number-cell number-purple">${formatNumber(reservados)}</span></td>
       <td><span class="number-cell number-blue">${formatNumber(confirmados)}</span></td>
@@ -2038,8 +2717,42 @@ document.querySelectorAll('.rodada-btn').forEach(btn => {
     const rodada = this.getAttribute('data-rodada');
     rodadaFiltro = rodada;
     
+    // Reset da ordenação ao trocar de rodada
+    sortColumn = null;
+    sortDirection = 'asc';
+    document.querySelectorAll('th.sortable').forEach(th => {
+      th.classList.remove('asc', 'desc');
+    });
+    
     // Renderiza a tabela com o filtro
-    renderTabelaJogos(rodada);
+    renderTabelaJogos(rodada, false);
+  });
+});
+
+// Event listeners para ordenação da tabela
+document.querySelectorAll('th.sortable').forEach(th => {
+  th.addEventListener('click', function(){
+    const column = this.getAttribute('data-column');
+    
+    // Se clicou na mesma coluna, inverte a direção
+    if(sortColumn === column){
+      sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      // Nova coluna, começa com ascendente
+      sortColumn = column;
+      sortDirection = 'asc';
+    }
+    
+    // Remove classes de todas as colunas
+    document.querySelectorAll('th.sortable').forEach(header => {
+      header.classList.remove('asc', 'desc');
+    });
+    
+    // Adiciona classe na coluna atual
+    this.classList.add(sortDirection);
+    
+    // Re-renderiza a tabela com ordenação
+    renderTabelaJogos(rodadaFiltro, true);
   });
 });
 
